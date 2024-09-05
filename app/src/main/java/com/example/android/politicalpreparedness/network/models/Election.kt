@@ -1,13 +1,14 @@
 package com.example.android.politicalpreparedness.network.models
 
-import androidx.room.*
-import com.squareup.moshi.*
-import java.util.*
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
+import java.util.Date
 
-@Entity(tableName = "election_table")
+@JsonClass(generateAdapter = true)
 data class Election(
-        @PrimaryKey val id: Int,
-        @ColumnInfo(name = "name")val name: String,
-        @ColumnInfo(name = "electionDay")val electionDay: Date,
-        @Embedded(prefix = "division_") @Json(name="ocdDivisionId") val division: Division
+    val id: Int,
+    val name: String,
+    val electionDay: Date,
+    @Json(name = "ocdDivisionId")
+    val division: Division
 )
