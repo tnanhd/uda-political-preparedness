@@ -2,8 +2,10 @@ package com.example.android.politicalpreparedness.representative
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
@@ -23,7 +25,12 @@ import com.example.android.politicalpreparedness.BuildConfig
 import com.example.android.politicalpreparedness.R
 import com.example.android.politicalpreparedness.databinding.FragmentRepresentativeBinding
 import com.example.android.politicalpreparedness.network.models.Address
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.LocationSettingsResponse
+import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
 import java.util.Locale
 
@@ -31,6 +38,7 @@ class RepresentativeFragment : Fragment() {
 
     companion object {
         const val TAG = "RepresentativeFragment"
+        private const val REQUEST_CHECK_SETTINGS = 1
     }
 
     private val fusedLocationProviderClient by lazy {
@@ -100,6 +108,8 @@ class RepresentativeFragment : Fragment() {
     @SuppressLint("MissingPermission")
     private fun getLocation() {
         if (checkLocationPermissions()) {
+            checkLocationSettings(requireActivity())
+
             viewModel.updateLoadingState(true)
             fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
                 location?.let {
@@ -162,6 +172,47 @@ class RepresentativeFragment : Fragment() {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 })
             }.show()
+    }
+
+    private fun checkLocationSettings(activity: Activity) {
+        val task: Task<LocationSettingsResponse> =
+            LocationServices.getSettingsClient(activity)
+                .checkLocationSettings(
+                    LocationSettingsRequest.Builder()
+                        .addLocationRequest(LocationRequest.create().apply {
+                            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+                        })
+                        .build()
+                )
+
+        task.addOnFailureListener(activity) { e ->
+            if (e is ResolvableApiException) {
+                // Location settings are not satisfied, but this can be fixed by showing a dialog
+                try {
+                    // Show the dialog by calling startResolutionForResult(), and check the result in onActivityResult()
+                    e.startResolutionForResult(activity, REQUEST_CHECK_SETTINGS)
+                } catch (sendIntentException: IntentSender.SendIntentException) {
+                    // Ignore the error
+                }
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "Location settings are enabled",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CHECK_SETTINGS) {
+            when (resultCode) {
+                Activity.RESULT_OK -> {
+                    getLocation()
+                }
+            }
+        }
     }
 
 }
