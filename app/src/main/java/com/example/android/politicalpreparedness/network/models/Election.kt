@@ -1,7 +1,7 @@
 package com.example.android.politicalpreparedness.network.models
 
 import android.os.Parcelable
-import com.example.android.politicalpreparedness.database.models.DatabaseTable
+import com.example.android.politicalpreparedness.database.models.ElectionTable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import kotlinx.parcelize.Parcelize
@@ -18,7 +18,7 @@ data class Election(
     val division: Division
 ) : Parcelable
 
-fun Election.asDatabaseElection() = DatabaseTable(
+fun Election.asDatabaseElection() = ElectionTable(
     id = id,
     name = name,
     electionDay = electionDay,

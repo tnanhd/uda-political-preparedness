@@ -95,7 +95,7 @@
             app:constraint_referenced_ids="state_correspondence_header,address" />
 
         <ProgressBar
-            android:id="@+id/progressBar"
+            android:id="@+id/progress_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fadeVisible="@{viewModel.isLoading().booleanValue()}"
@@ -121,7 +121,6 @@
             app:layout_constraintStart_toStartOf="@id/election_date"
             app:layout_constraintTop_toBottomOf="@id/state_correspondence_header" />
 
-        <!-- TODO: Add button to save election to Room -->
         <Button
             android:id="@+id/follow_election_button"
             android:layout_width="0dp"
@@ -129,7 +128,7 @@
             android:layout_margin="@dimen/margin_medium"
             android:background="@color/colorPrimaryDark"
             android:text="@string/loading"
-            android:onClick="@{() -> viewModel.saveElection()}"
+            android:onClick="@{() -> viewModel.toggleFollowingElection()}"
             android:textColor="@android:color/white"
             android:textSize="@dimen/text_size_medium"
             app:layout_constraintBottom_toBottomOf="parent"

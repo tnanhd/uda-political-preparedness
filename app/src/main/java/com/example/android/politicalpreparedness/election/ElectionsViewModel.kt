@@ -5,15 +5,20 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.android.politicalpreparedness.database.ElectionDatabase
+import com.example.android.politicalpreparedness.database.ElectionRepository
+import com.example.android.politicalpreparedness.database.models.ElectionTable
 import com.example.android.politicalpreparedness.network.CivicsApi
 import com.example.android.politicalpreparedness.network.models.Election
 import kotlinx.coroutines.launch
 
-//TODO: Construct ViewModel and provide election datasource
 class ElectionsViewModel(application: Application): AndroidViewModel(application) {
-    private val _elections = MutableLiveData<List<Election>>()
-    val elections: LiveData<List<Election>>
-        get() = _elections
+    private val electionRepository = ElectionRepository(ElectionDatabase.getInstance(application))
+    val savedElections: LiveData<List<ElectionTable>> = electionRepository.getElections()
+
+    private val _fetchedElections = MutableLiveData<List<Election>>()
+    val fetchedElections: LiveData<List<Election>>
+        get() = _fetchedElections
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean>
@@ -35,18 +40,12 @@ class ElectionsViewModel(application: Application): AndroidViewModel(application
         populateElections()
     }
 
-    //TODO: Create live data val for saved elections
-
-    //TODO: Create val and functions to populate live data for upcoming elections from the API and saved elections from local database
     fun populateElections() {
         _isLoading.value = true
         viewModelScope.launch {
             val electionResponse = CivicsApi.retrofitService.getElections()
-            _elections.value = electionResponse.elections
+            _fetchedElections.value = electionResponse.elections
             _isLoading.value = false
         }
     }
-
-    //TODO: Create functions to navigate to saved or upcoming election voter info
-
 }

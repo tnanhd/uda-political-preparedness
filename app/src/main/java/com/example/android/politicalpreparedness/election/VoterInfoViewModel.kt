@@ -104,7 +104,7 @@ class VoterInfoViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
-    fun saveElection() {
+    fun toggleFollowingElection() {
         _isLoading.value = true
         viewModelScope.launch {
             if (_isElectionFollowed.value == true) {
@@ -129,9 +129,4 @@ class VoterInfoViewModel(application: Application) : AndroidViewModel(applicatio
     fun showToastCompleted() {
         _showToast.value = null
     }
-
-    /**
-     * Hint: The saved state can be accomplished in multiple ways. It is directly related to how elections are saved/removed from the database.
-     */
-
 }
