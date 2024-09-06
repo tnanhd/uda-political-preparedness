@@ -19,6 +19,18 @@ class ElectionsViewModel(application: Application): AndroidViewModel(application
     val isLoading: LiveData<Boolean>
         get() = _isLoading
 
+    private val _navigateToVoterInfo = MutableLiveData<Election?>()
+    val navigateToVoterInfo: LiveData<Election?>
+        get() = _navigateToVoterInfo
+
+    fun displayElectionDetail(it: Election) {
+        _navigateToVoterInfo.value = it
+    }
+
+    fun displayElectionDetailCompleted() {
+        _navigateToVoterInfo.value = null
+    }
+
     init {
         populateElections()
     }

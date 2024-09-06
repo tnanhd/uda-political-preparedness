@@ -1,35 +1,75 @@
 package com.example.android.politicalpreparedness.election
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import com.example.android.politicalpreparedness.R
+import com.example.android.politicalpreparedness.databinding.FragmentVoterInfoBinding
 
 class VoterInfoFragment : Fragment() {
+
+    private val _viewModel: VoterInfoViewModel by lazy {
+        val activity = requireNotNull(this.activity) {
+            "You can only access the viewModel after onActivityCreated()"
+        }
+        ViewModelProvider(this, VoterInfoViewModelFactory(activity.application))
+            .get(VoterInfoViewModel::class.java)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?)
-    : View? {
+        savedInstanceState: Bundle?
+    ): View {
 
-        // TODO: Add ViewModel values and create ViewModel
+        val binding = FragmentVoterInfoBinding.inflate(inflater)
+        binding.lifecycleOwner = this
+        binding.viewModel = _viewModel
+        binding.executePendingBindings()
 
-        // TODO: Add binding values
+        val args = VoterInfoFragmentArgs.fromBundle(requireArguments())
+        val division = args.argDivision
+        val electionId = args.argElectionId
+        val state = division.state.ifEmpty { "ri" }
 
-        // TODO: Populate voter info -- hide views without provided data.
+        _viewModel.populateVoterInfo(state, electionId)
 
-        /**
-        Hint: You will need to ensure proper data is provided from previous fragment.
-        */
+        _viewModel.dataNotAvailable.observe(viewLifecycleOwner) { isDataNotAvailable ->
+            isDataNotAvailable?.let {
+                if (isDataNotAvailable) {
+                    // Show error and go back
+                    Toast.makeText(requireContext(),
+                        getString(R.string.error_election_detail_not_found), Toast.LENGTH_SHORT)
+                        .show()
+                    findNavController().navigateUp()
+                    _viewModel.finishFetching()
+                }
+            }
+        }
 
-        // TODO: Handle loading of URLs
+        _viewModel.votingLocationUrl.observe(viewLifecycleOwner) { url ->
+            openWebView(url)
+        }
+
+        _viewModel.ballotInfoUrl.observe(viewLifecycleOwner) { url ->
+            openWebView(url)
+        }
 
         // TODO: Handle save button UI state
         // TODO: cont'd Handle save button clicks
-        return null
+        return binding.root
     }
 
-    // TODO: Create method to load URL intents
+    private fun openWebView(url: String?) {
+        url?.let {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+        }
+    }
 }

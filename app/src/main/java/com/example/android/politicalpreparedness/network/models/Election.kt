@@ -1,9 +1,13 @@
 package com.example.android.politicalpreparedness.network.models
 
+import android.os.Parcelable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import kotlinx.parcelize.Parcelize
 import java.util.Date
 
+
+@Parcelize
 @JsonClass(generateAdapter = true)
 data class Election(
     val id: Int,
@@ -11,4 +15,4 @@ data class Election(
     val electionDay: Date,
     @Json(name = "ocdDivisionId")
     val division: Division
-)
+) : Parcelable

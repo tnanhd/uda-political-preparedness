@@ -8,9 +8,11 @@ import java.util.Date
 import java.util.Locale
 
 @BindingAdapter("dateStr")
-fun TextView.bindDate(date: Date) {
+fun TextView.bindDate(date: Date?) {
     val dateFormat = SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.getDefault())
-    text = dateFormat.format(date)
+    text = date?.let {
+        dateFormat.format(it)
+    }
 }
 
 object BindingAdapters {
