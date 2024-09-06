@@ -9,6 +9,9 @@
     <string name="voting_locations">Voting Locations</string>
     <string name="ballot_information">Ballot Information</string>
     <string name="error_election_detail_not_found">Can\'t open this election</string>
+    <string name="follow_election_button_text">Follow election</string>
+    <string name="unfollow_election_button_text">Unfollow election</string>
+    <string name="loading">Loading...</string>
 
     <!-- TODO: Add necessary string values -->
 

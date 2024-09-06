@@ -6,11 +6,15 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.android.politicalpreparedness.database.ElectionDatabase
+import com.example.android.politicalpreparedness.database.ElectionRepository
 import com.example.android.politicalpreparedness.network.CivicsApi
 import com.example.android.politicalpreparedness.network.models.VoterInfoResponse
+import com.example.android.politicalpreparedness.network.models.asDatabaseElection
 import kotlinx.coroutines.launch
 
 class VoterInfoViewModel(application: Application) : AndroidViewModel(application) {
+    private val electionRepository = ElectionRepository(ElectionDatabase.getInstance(application))
 
     var showVotingUrl = View.VISIBLE
     var showBallotUrl = View.VISIBLE
@@ -35,6 +39,14 @@ class VoterInfoViewModel(application: Application) : AndroidViewModel(applicatio
     val isLoading: LiveData<Boolean>
         get() = _isLoading
 
+    private val _showToast = MutableLiveData<String?>()
+    val showToast: LiveData<String?>
+        get() = _showToast
+
+    private val _isElectionFollowed = MutableLiveData<Boolean?>()
+    val isElectionFollowed: LiveData<Boolean?>
+        get() = _isElectionFollowed
+
     fun populateVoterInfo(address: String, electionId: Int) {
         _isLoading.value = true
         viewModelScope.launch {
@@ -55,6 +67,8 @@ class VoterInfoViewModel(application: Application) : AndroidViewModel(applicatio
                     } else {
                         View.VISIBLE
                     }
+
+                checkElectionFollowed(_voterInfo.value?.election?.id)
             } catch (e: Exception) {
                 _voterInfo.value = null
                 _dataNotAvailable.value = true
@@ -81,8 +95,40 @@ class VoterInfoViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
-    //TODO: Add var and methods to save and remove elections to local database
-    //TODO: cont'd -- Populate initial state of save button to reflect proper action based on election saved status
+    private fun checkElectionFollowed(electionId: Int?) {
+        viewModelScope.launch {
+            electionId?.let {
+                val election = electionRepository.getElectionById(electionId)
+                _isElectionFollowed.value = election != null
+            }
+        }
+    }
+
+    fun saveElection() {
+        _isLoading.value = true
+        viewModelScope.launch {
+            if (_isElectionFollowed.value == true) {
+                electionRepository.deleteElection(_voterInfo.value?.election?.id!!)
+                _showToast.value = "Election unfollowed"
+                _isElectionFollowed.value = false
+            } else {
+                val election = _voterInfo.value?.election
+                if (election != null) {
+                    electionRepository.insertElection(election.asDatabaseElection())
+                    _showToast.value = "Election followed"
+                } else {
+                    _showToast.value = "Cannot follow. Election not found"
+                }
+                _isElectionFollowed.value = true
+            }
+
+            _isLoading.value = false
+        }
+    }
+
+    fun showToastCompleted() {
+        _showToast.value = null
+    }
 
     /**
      * Hint: The saved state can be accomplished in multiple ways. It is directly related to how elections are saved/removed from the database.

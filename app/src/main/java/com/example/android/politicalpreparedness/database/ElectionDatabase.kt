@@ -5,9 +5,9 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.example.android.politicalpreparedness.database.models.DatabaseElection
+import com.example.android.politicalpreparedness.database.models.DatabaseTable
 
-@Database(entities = [DatabaseElection::class], version = 1, exportSchema = false)
+@Database(entities = [DatabaseTable::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class ElectionDatabase: RoomDatabase() {
 

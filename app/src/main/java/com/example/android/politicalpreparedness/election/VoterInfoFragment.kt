@@ -45,8 +45,10 @@ class VoterInfoFragment : Fragment() {
             isDataNotAvailable?.let {
                 if (isDataNotAvailable) {
                     // Show error and go back
-                    Toast.makeText(requireContext(),
-                        getString(R.string.error_election_detail_not_found), Toast.LENGTH_SHORT)
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.error_election_detail_not_found), Toast.LENGTH_SHORT
+                    )
                         .show()
                     findNavController().navigateUp()
                     _viewModel.finishFetching()
@@ -62,8 +64,24 @@ class VoterInfoFragment : Fragment() {
             openWebView(url)
         }
 
-        // TODO: Handle save button UI state
-        // TODO: cont'd Handle save button clicks
+        _viewModel.showToast.observe(viewLifecycleOwner) { message ->
+            message?.let {
+                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                _viewModel.showToastCompleted()
+            }
+        }
+
+        _viewModel.isElectionFollowed.observe(viewLifecycleOwner) { isFollowed ->
+            isFollowed?.let {
+                binding.followElectionButton.text =
+                    if (isFollowed) {
+                        requireContext().getString(R.string.unfollow_election_button_text)
+                    } else {
+                        requireContext().getString(R.string.follow_election_button_text)
+                    }
+            }
+        }
+
         return binding.root
     }
 

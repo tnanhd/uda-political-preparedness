@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.example.android.politicalpreparedness.election.VoterInfoViewModel" />
@@ -67,10 +68,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_xsmall"
+            android:onClick="@{() -> viewModel.loadVotingLocationUrl()}"
             android:text="@string/voting_locations"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="@dimen/text_size_default"
-            android:onClick="@{() -> viewModel.loadVotingLocationUrl()}"
             android:visibility="@{viewModel.showVotingUrl}"
             app:layout_constraintStart_toStartOf="@id/election_date"
             app:layout_constraintTop_toBottomOf="@id/state_header" />
@@ -79,11 +80,11 @@
             android:id="@+id/state_ballot"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/ballot_information"
             android:onClick="@{() -> viewModel.loadBallotInfoUrl()}"
-            android:visibility="@{viewModel.showBallotUrl}"
+            android:text="@string/ballot_information"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="@dimen/text_size_default"
+            android:visibility="@{viewModel.showBallotUrl}"
             app:layout_constraintStart_toStartOf="@id/election_date"
             app:layout_constraintTop_toBottomOf="@id/state_locations" />
 
@@ -121,6 +122,20 @@
             app:layout_constraintTop_toBottomOf="@id/state_correspondence_header" />
 
         <!-- TODO: Add button to save election to Room -->
+        <Button
+            android:id="@+id/follow_election_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_medium"
+            android:background="@color/colorPrimaryDark"
+            android:text="@string/loading"
+            android:onClick="@{() -> viewModel.saveElection()}"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size_medium"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="@string/follow_election_button_text" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

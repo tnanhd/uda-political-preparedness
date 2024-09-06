@@ -2,21 +2,26 @@ package com.example.android.politicalpreparedness.database
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Update
-import com.example.android.politicalpreparedness.network.models.Election
+import com.example.android.politicalpreparedness.database.models.DatabaseTable
 
 @Dao
 interface ElectionDao {
 
-    //TODO: Add insert query
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertElection(election: DatabaseTable)
 
-    //TODO: Add select all election query
+    @Query("SELECT * FROM election_table ORDER BY electionDay DESC")
+    suspend fun getElections(): List<DatabaseTable>
 
-    //TODO: Add select single election query
+    @Query("SELECT * FROM election_table WHERE id = :electionId ORDER BY electionDay DESC")
+    suspend fun getElection(electionId: Int): DatabaseTable?
 
-    //TODO: Add delete query
+    @Query("DELETE FROM election_table")
+    suspend fun clearElections()
 
-    //TODO: Add clear query
+    @Query("DELETE FROM election_table WHERE id = :electionId")
+    suspend fun deleteElection(electionId: Int)
 
 }

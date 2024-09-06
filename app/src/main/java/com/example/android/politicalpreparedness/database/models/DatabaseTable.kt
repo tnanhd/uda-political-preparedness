@@ -8,9 +8,9 @@ import com.example.android.politicalpreparedness.network.models.Division
 import java.util.Date
 
 @Entity(tableName = "election_table")
-data class DatabaseElection(
-        @PrimaryKey val id: Int,
-        @ColumnInfo(name = "name")val name: String,
-        @ColumnInfo(name = "electionDay")val electionDay: Date,
-        @Embedded(prefix = "division_") val division: Division
+data class DatabaseTable(
+    @PrimaryKey val id: Int,
+    @ColumnInfo(name = "name") val name: String,
+    @ColumnInfo(name = "electionDay") val electionDay: Date,
+    @Embedded(prefix = "division_") val division: Division
 )
