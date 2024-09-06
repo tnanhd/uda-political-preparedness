@@ -23,5 +23,9 @@
     <string name="my_representatives">My Representatives</string>
     <string name="settings">Settings</string>
     <string name="permission_denied_explanation">You need to grant location permission in order to use this feature.</string>
+    <string name="picture_representative_photo">Picture: Representative photo</string>
+    <string name="icon_twitter">Icon twitter</string>
+    <string name="icon_fb">Icon facebook</string>
+    <string name="icon_www">Icon web</string>
 
 </resources>

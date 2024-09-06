@@ -25,6 +25,8 @@ import com.example.android.politicalpreparedness.BuildConfig
 import com.example.android.politicalpreparedness.R
 import com.example.android.politicalpreparedness.databinding.FragmentRepresentativeBinding
 import com.example.android.politicalpreparedness.network.models.Address
+import com.example.android.politicalpreparedness.representative.adapter.RepresentativeListAdapter
+import com.example.android.politicalpreparedness.representative.adapter.RepresentativeListener
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
@@ -69,14 +71,24 @@ class RepresentativeFragment : Fragment() {
         binding.lifecycleOwner = this
 
         binding.buttonLocation.setOnClickListener {
+            hideKeyboard()
             getLocation()
         }
 
-        //TODO: Define and assign Representative adapter
+        binding.buttonSearch.setOnClickListener {
+            hideKeyboard()
+            viewModel.findRepresentatives()
+        }
 
-        //TODO: Populate Representative adapter
+        val adapter = RepresentativeListAdapter(RepresentativeListener { representative ->
+            viewModel.onRepresentativeSelected(representative)
+        })
 
-        //TODO: Establish button listeners for field and location search
+        binding.representativeRecyclerView.adapter = adapter
+        viewModel.representatives.observe(viewLifecycleOwner) {
+            adapter.submitList(it)
+        }
+
         return binding.root
     }
 
@@ -115,6 +127,7 @@ class RepresentativeFragment : Fragment() {
                 location?.let {
                     val address = geoCodeLocation(location)
                     viewModel.updateAddress(address)
+                    viewModel.findRepresentatives()
                 }
             }
                 .addOnCompleteListener {
