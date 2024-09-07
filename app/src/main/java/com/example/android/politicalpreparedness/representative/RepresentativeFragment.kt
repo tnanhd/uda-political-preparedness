@@ -60,13 +60,14 @@ class RepresentativeFragment : Fragment() {
     }
 
     private val viewModel: RepresentativeViewModel by viewModels<RepresentativeViewModel>()
+    private lateinit var binding: FragmentRepresentativeBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val binding = FragmentRepresentativeBinding.inflate(inflater)
+        binding = FragmentRepresentativeBinding.inflate(inflater)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
@@ -77,6 +78,15 @@ class RepresentativeFragment : Fragment() {
 
         binding.buttonSearch.setOnClickListener {
             hideKeyboard()
+            viewModel.updateAddress(
+                Address(
+                    viewModel.addressLine1.value ?: "",
+                    viewModel.addressLine2.value,
+                    viewModel.city.value ?: "",
+                    viewModel.state.value ?: "",
+                    viewModel.zip.value ?: ""
+                )
+            )
             viewModel.findRepresentatives()
         }
 
@@ -89,7 +99,19 @@ class RepresentativeFragment : Fragment() {
             adapter.submitList(it)
         }
 
+        viewModel.showToast.observe(viewLifecycleOwner) { message ->
+            message?.let {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                viewModel.showToastCompleted()
+            }
+        }
+
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.state.setSelection(0)
     }
 
     private fun checkLocationPermissions(): Boolean {

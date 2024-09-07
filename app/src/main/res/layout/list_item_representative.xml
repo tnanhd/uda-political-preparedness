@@ -27,8 +27,8 @@
             android:src="@drawable/ic_profile"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:profileImage="@{representative.official.photoUrl}"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:profileImage="@{representative.official.photoUrl}" />
 
         <TextView
             android:id="@+id/office_name_text_view"
@@ -37,6 +37,8 @@
             android:layout_marginStart="@dimen/margin_small"
             android:layout_marginEnd="@dimen/margin_small"
             android:alpha="0.5"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:text="@{representative.office.name}"
             android:textColor="@android:color/black"
             android:textSize="@dimen/text_size_medium"
@@ -48,25 +50,31 @@
 
         <TextView
             android:id="@+id/name_text_view"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_xsmall"
             android:alpha="0.5"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:text="@{representative.official.name}"
             android:textColor="@android:color/black"
             android:textSize="@dimen/text_size_medium"
+            app:layout_constraintEnd_toStartOf="@+id/www_icon"
             app:layout_constraintStart_toStartOf="@+id/office_name_text_view"
             app:layout_constraintTop_toBottomOf="@+id/office_name_text_view"
             tools:text="Donald J. Trump" />
 
         <TextView
             android:id="@+id/party_text_view"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:alpha="0.5"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:text="@{representative.official.party}"
             android:textColor="@android:color/black"
             android:textSize="@dimen/text_size_default"
+            app:layout_constraintEnd_toStartOf="@+id/www_icon"
             app:layout_constraintStart_toStartOf="@+id/office_name_text_view"
             app:layout_constraintTop_toBottomOf="@+id/name_text_view"
             tools:text="Republican Party" />

@@ -11,10 +11,19 @@ import kotlinx.coroutines.launch
 
 class RepresentativeViewModel : ViewModel() {
 
-    //TODO: Establish live data for representatives and address
     private val _address = MutableLiveData<Address?>()
     val address: LiveData<Address?>
         get() = _address
+
+    private val _showToast = MutableLiveData<String?>()
+    val showToast: LiveData<String?>
+        get() = _showToast
+
+    val addressLine1 = MutableLiveData<String?>()
+    val addressLine2 = MutableLiveData<String?>()
+    val city = MutableLiveData<String?>()
+    val state = MutableLiveData<String?>()
+    val zip = MutableLiveData<String?>()
 
     private val _isLoading = MutableLiveData<Boolean?>(null)
     val isLoading: LiveData<Boolean?>
@@ -26,20 +35,34 @@ class RepresentativeViewModel : ViewModel() {
 
     fun updateAddress(address: Address) {
         _address.value = address
+        addressLine1.value = address.line1
+        addressLine2.value = address.line2
+        city.value = address.city
+        state.value = address.state
+        zip.value = address.zip
     }
 
     fun updateLoadingState(state: Boolean) {
         _isLoading.value = state
     }
 
+    fun showToastCompleted() {
+        _showToast.value = null
+    }
+
     fun findRepresentatives() {
         _isLoading.value = true
         viewModelScope.launch {
             _address.value?.let { address ->
-                val (offices, officials) = CivicsApi.retrofitService
-                    .getRepresentativesByAddress(address.toFormattedString())
-                _representatives.value = offices.flatMap { office ->
-                    office.getRepresentatives(officials)
+                try {
+                    val (offices, officials) = CivicsApi.retrofitService
+                        .getRepresentativesByAddress(address.toFormattedString())
+                    _representatives.value = offices.flatMap { office ->
+                        office.getRepresentatives(officials)
+                    }
+                } catch (e: Exception) {
+                    _representatives.value = emptyList()
+                    _showToast.value = "Representatives not found"
                 }
             }
             _isLoading.value = false
@@ -49,7 +72,4 @@ class RepresentativeViewModel : ViewModel() {
     fun onRepresentativeSelected(representative: Representative) {
         TODO("Not yet implemented")
     }
-
-    //TODO: Create function to get address from individual fields
-
 }
