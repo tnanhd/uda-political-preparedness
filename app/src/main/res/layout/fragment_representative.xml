@@ -110,7 +110,7 @@
                 android:layout_marginTop="@dimen/margin_xsmall"
                 android:alpha="0.9"
                 android:background="@color/colorPrimaryDark"
-                android:text="@string/find_my_representative_button_text"
+                android:text="@string/find_representative_button_text"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/text_size_default"
                 app:layout_constraintEnd_toEndOf="@+id/search_title"

@@ -141,11 +141,11 @@ class RepresentativeFragment : Fragment() {
         return geocoder?.getFromLocation(location.latitude, location.longitude, 1)
             ?.map { address ->
                 Address(
-                    address.thoroughfare,
-                    address.subThoroughfare,
-                    address.locality,
-                    address.adminArea,
-                    address.postalCode
+                    line1 = address.thoroughfare ?: "Unnamed Road",
+                    line2 = address.subThoroughfare,
+                    city = address.locality,
+                    state = address.adminArea,
+                    zip = address.postalCode
                 )
             }
             ?.first() ?: Address("", "", "", "", "")

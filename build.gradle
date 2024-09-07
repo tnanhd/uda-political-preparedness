@@ -18,6 +18,7 @@ buildscript {
         version_room = "2.6.1"
         version_timber = "5.0.1"
         version_secrets_gradle_plugin = "2.0.1"
+        version_glide="4.16.0"
     }
 
     repositories {
