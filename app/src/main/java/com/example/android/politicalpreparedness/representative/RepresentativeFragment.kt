@@ -71,6 +71,7 @@ class RepresentativeFragment : Fragment() {
         binding = FragmentRepresentativeBinding.inflate(inflater)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
+        binding.executePendingBindings()
 
         binding.buttonLocation.setOnClickListener {
             hideKeyboard()
