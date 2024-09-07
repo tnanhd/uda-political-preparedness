@@ -42,6 +42,7 @@ class RepresentativeFragment : Fragment() {
     companion object {
         const val TAG = "RepresentativeFragment"
         private const val REQUEST_CHECK_SETTINGS = 1
+        const val MOTION_LAYOUT_STATE = "motion_layout_state"
     }
 
     private val fusedLocationProviderClient by lazy {
@@ -116,6 +117,15 @@ class RepresentativeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.state.setSelection(0)
+
+        savedInstanceState?.let {
+            binding.representativeMotionLayout.transitionToState(it.getInt(MOTION_LAYOUT_STATE))
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(MOTION_LAYOUT_STATE, binding.representativeMotionLayout.currentState)
     }
 
     private fun checkLocationPermissions(): Boolean {
