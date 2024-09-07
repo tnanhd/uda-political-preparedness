@@ -2,6 +2,7 @@ package com.example.android.politicalpreparedness.representative
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.android.politicalpreparedness.network.CivicsApi
@@ -9,7 +10,11 @@ import com.example.android.politicalpreparedness.network.models.Address
 import com.example.android.politicalpreparedness.representative.model.Representative
 import kotlinx.coroutines.launch
 
-class RepresentativeViewModel : ViewModel() {
+class RepresentativeViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
+
+    companion object {
+        private const val SAVED_DATA_KEY = "saved_data"
+    }
 
     private val _address = MutableLiveData<Address?>()
     val address: LiveData<Address?>
@@ -33,6 +38,10 @@ class RepresentativeViewModel : ViewModel() {
     val representatives: LiveData<List<Representative>>
         get() = _representatives
 
+    init {
+        _representatives.value = savedStateHandle.get(SAVED_DATA_KEY) ?: emptyList()
+    }
+
     fun updateAddress(address: Address) {
         _address.value = address
         addressLine1.value = address.line1
@@ -54,16 +63,17 @@ class RepresentativeViewModel : ViewModel() {
         _isLoading.value = true
         viewModelScope.launch {
             _address.value?.let { address ->
+                var representativeList: List<Representative> = emptyList()
                 try {
                     val (offices, officials) = CivicsApi.retrofitService
                         .getRepresentativesByAddress(address.toFormattedString())
-                    _representatives.value = offices.flatMap { office ->
-                        office.getRepresentatives(officials)
-                    }
+                    representativeList =
+                        offices.flatMap { office -> office.getRepresentatives(officials) }
                 } catch (e: Exception) {
-                    _representatives.value = emptyList()
                     _showToast.value = "Representatives not found"
                 }
+                _representatives.value = representativeList
+                savedStateHandle.set(SAVED_DATA_KEY, representativeList)
             }
             _isLoading.value = false
         }
