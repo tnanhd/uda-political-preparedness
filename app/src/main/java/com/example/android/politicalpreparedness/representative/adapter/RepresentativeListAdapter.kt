@@ -39,7 +39,6 @@ class RepresentativeViewHolder(val binding: ListItemRepresentativeBinding) :
 
     fun bind(item: Representative) {
         binding.representative = item
-        binding.representativePhoto.setImageResource(R.drawable.ic_profile)
 
         item.official.channels?.let { channels -> showSocialLinks(channels) }
         item.official.urls?.let { urls -> showWWWLinks(urls) }

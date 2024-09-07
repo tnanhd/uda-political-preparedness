@@ -14,13 +14,16 @@ import com.example.android.politicalpreparedness.R
 
 @BindingAdapter("profileImage")
 fun fetchImage(view: ImageView, src: String?) {
-    src?.let {
+    if (src != null) {
         val uri = src.toUri().buildUpon().scheme("https").build()
         Glide.with(view.context)
             .load(uri)
             .circleCrop()
-            .placeholder(R.drawable.ic_profile)
+            .placeholder(R.drawable.loading_img)
+            .error(R.drawable.ic_profile)
             .into(view)
+    } else {
+        view.setImageResource(R.drawable.ic_profile)
     }
 }
 
