@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.android.politicalpreparedness.R
 import com.example.android.politicalpreparedness.databinding.FragmentVoterInfoBinding
+import com.example.android.politicalpreparedness.utils.setDisplayUpButton
 
 class VoterInfoFragment : Fragment() {
 
@@ -81,6 +82,8 @@ class VoterInfoFragment : Fragment() {
                     }
             }
         }
+
+        setDisplayUpButton(true)
 
         return binding.root
     }

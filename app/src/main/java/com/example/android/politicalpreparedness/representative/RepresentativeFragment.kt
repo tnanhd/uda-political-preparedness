@@ -27,6 +27,7 @@ import com.example.android.politicalpreparedness.databinding.FragmentRepresentat
 import com.example.android.politicalpreparedness.network.models.Address
 import com.example.android.politicalpreparedness.representative.adapter.RepresentativeListAdapter
 import com.example.android.politicalpreparedness.representative.adapter.RepresentativeListener
+import com.example.android.politicalpreparedness.utils.setDisplayUpButton
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
@@ -105,6 +106,8 @@ class RepresentativeFragment : Fragment() {
                 viewModel.showToastCompleted()
             }
         }
+
+        setDisplayUpButton(true)
 
         return binding.root
     }

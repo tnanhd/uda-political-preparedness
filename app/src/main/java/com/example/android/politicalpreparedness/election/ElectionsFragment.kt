@@ -12,6 +12,7 @@ import com.example.android.politicalpreparedness.database.models.asElection
 import com.example.android.politicalpreparedness.databinding.FragmentElectionBinding
 import com.example.android.politicalpreparedness.election.adapter.ElectionListAdapter
 import com.example.android.politicalpreparedness.election.adapter.ElectionListener
+import com.example.android.politicalpreparedness.utils.setDisplayUpButton
 
 class ElectionsFragment : Fragment() {
 
@@ -58,6 +59,8 @@ class ElectionsFragment : Fragment() {
                 _viewModel.displayElectionDetailCompleted()
             }
         }
+
+        setDisplayUpButton(true)
 
         return binding.root
     }

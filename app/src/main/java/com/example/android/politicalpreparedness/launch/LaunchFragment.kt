@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.android.politicalpreparedness.databinding.FragmentLaunchBinding
+import com.example.android.politicalpreparedness.utils.setDisplayUpButton
 
 class LaunchFragment : Fragment() {
 
@@ -22,6 +23,11 @@ class LaunchFragment : Fragment() {
         binding.upcomingElectionsButton.setOnClickListener { navToElections() }
 
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setDisplayUpButton(false)
     }
 
     private fun navToElections() {
