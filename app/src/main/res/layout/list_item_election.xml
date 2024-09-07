@@ -13,10 +13,9 @@
             type="com.example.android.politicalpreparedness.election.adapter.ElectionListener" />
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:onClick="@{() -> clickListener.onClick(election)}"
         android:paddingTop="@dimen/default_padding">
 
@@ -29,6 +28,7 @@
             android:textColor="@android:color/black"
             android:textSize="@dimen/text_size_medium"
             android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="VIP test Election" />
 
         <TextView
@@ -38,8 +38,9 @@
             android:alpha="0.5"
             android:textColor="@android:color/black"
             android:textSize="@dimen/text_size_medium"
+            app:layout_constraintTop_toBottomOf="@+id/election_name"
             app:dateStr="@{election.electionDay}"
             tools:text="Sun November 12" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
