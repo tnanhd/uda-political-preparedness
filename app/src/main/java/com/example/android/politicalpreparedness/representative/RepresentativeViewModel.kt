@@ -34,6 +34,8 @@ class RepresentativeViewModel(private val savedStateHandle: SavedStateHandle) : 
     val isLoading: LiveData<Boolean?>
         get() = _isLoading
 
+    val showNoData = MutableLiveData<Boolean>()
+
     private val _representatives = MutableLiveData<List<Representative>>()
     val representatives: LiveData<List<Representative>>
         get() = _representatives
@@ -75,8 +77,10 @@ class RepresentativeViewModel(private val savedStateHandle: SavedStateHandle) : 
                 _representatives.value = representativeList
                 savedStateHandle.set(SAVED_DATA_KEY, representativeList)
             }
+            showNoData.value = _representatives.value?.isEmpty()
             _isLoading.value = false
         }
+
     }
 
     fun onRepresentativeSelected(representative: Representative) {

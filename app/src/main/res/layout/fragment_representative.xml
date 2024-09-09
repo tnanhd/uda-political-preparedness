@@ -183,5 +183,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/no_data_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fadeVisible="@{viewModel.showNoData.booleanValue()}"
+            android:gravity="center"
+            android:text="@string/no_data"
+            android:textSize="@dimen/text_size_large"
+            app:drawableTopCompat="@drawable/ic_no_data"
+            app:layout_constraintBottom_toBottomOf="@+id/representative_recycler_view"
+            app:layout_constraintEnd_toEndOf="@+id/representative_recycler_view"
+            app:layout_constraintStart_toStartOf="@+id/representative_recycler_view"
+            app:layout_constraintTop_toTopOf="@+id/representative_recycler_view" />
     </androidx.constraintlayout.motion.widget.MotionLayout>
 </layout>

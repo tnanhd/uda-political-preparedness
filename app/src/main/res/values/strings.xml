@@ -26,5 +26,6 @@
     <string name="icon_twitter">Icon twitter</string>
     <string name="icon_fb">Icon facebook</string>
     <string name="icon_www">Icon web</string>
+    <string name="no_data">No Data</string>
 
 </resources>
